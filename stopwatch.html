@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Stopwatch</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      text-align: center;
+      padding: 40px;
+    }
+    .stopwatch-display {
+      font-size: 30px;
+      padding: 20px;
+      border: 2px solid black;
+      background-color: white;
+      margin-bottom: 20px;
+    }
+    .stopwatch-buttons button {
+      margin: 5px;
+      padding: 8px 16px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>Stopwatch</h1>
+  <div class="stopwatch-display" id="stopwatchDisplay">0s</div>
+  <div class="stopwatch-buttons">
+    <button onclick="startStopwatch()">Start</button>
+    <button onclick="stopStopwatch()">Stop</button>
+    <button onclick="resetStopwatch()">Reset</button>
+  </div>
+
+  <script>
+    let stopwatchTime = 0;
+    let stopwatchInterval;
+
+    function startStopwatch() {
+      if (!stopwatchInterval && stopwatchTime < 30) {
+        stopwatchInterval = setInterval(() => {
+          if (stopwatchTime < 30) {
+            stopwatchTime += 3;
+            document.getElementById("stopwatchDisplay").innerText = stopwatchTime + "s";
+          }
+          if (stopwatchTime >= 30) {
+            clearInterval(stopwatchInterval);
+            stopwatchInterval = null;
+          }
+        }, 3000);
+      }
+    }
+
+    function stopStopwatch() {
+      clearInterval(stopwatchInterval);
+      stopwatchInterval = null;
+    }
+
+    function resetStopwatch() {
+      clearInterval(stopwatchInterval);
+      stopwatchInterval = null;
+      stopwatchTime = 0;
+      document.getElementById("stopwatchDisplay").innerText = "0s";
+    }
+  </script>
+</body>
+</html>

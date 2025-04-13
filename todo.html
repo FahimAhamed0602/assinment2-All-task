@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>To-Do List</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      text-align: center;
+      padding: 40px;
+    }
+    .todo-input-container {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    #todo-taskInput {
+      width: 300px;
+      padding: 8px;
+      font-size: 14px;
+      border: 1px solid #ddd;
+      border-radius: 4px 0 0 4px;
+    }
+    #todo-addButton {
+      padding: 8px 12px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 0 4px 4px 0;
+      cursor: pointer;
+    }
+    #todo-addButton:hover {
+      background-color: #45a049;
+    }
+    #todo-taskList {
+      list-style-type: none;
+      padding: 0;
+      max-width: 400px;
+      margin: auto;
+    }
+    #todo-taskList li {
+      background-color: white;
+      margin-bottom: 8px;
+      padding: 10px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .todo-task-text {
+      flex: 1;
+      margin-left: 10px;
+    }
+    .todo-completed {
+      text-decoration: line-through;
+      color: #888;
+    }
+    .todo-delete-btn {
+      background-color: #f44336;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .todo-delete-btn:hover {
+      background-color: #d32f2f;
+    }
+    .todo-checkbox {
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>To-Do List</h1>
+  <div class="todo-input-container">
+    <input type="text" id="todo-taskInput" placeholder="Add a new task...">
+    <button id="todo-addButton">Add</button>
+  </div>
+  <ul id="todo-taskList"></ul>
+
+  <script>
+    const todoTaskInput = document.getElementById('todo-taskInput');
+    const todoAddButton = document.getElementById('todo-addButton');
+    const todoTaskList = document.getElementById('todo-taskList');
+    let todoTasks = [];
+
+    document.addEventListener('DOMContentLoaded', function () {
+      const savedTasks = localStorage.getItem('todoTasks');
+      if (savedTasks) {
+        todoTasks = JSON.parse(savedTasks);
+        todoRenderTasks();
+      }
+    });
+
+    function todoSaveTasks() {
+      localStorage.setItem('todoTasks', JSON.stringify(todoTasks));
+    }
+
+    function todoAddTask() {
+      const taskText = todoTaskInput.value.trim();
+      if (taskText !== '') {
+        const newTask = {
+          id: Date.now().toString(),
+          text: taskText,
+          completed: false
+        };
+        todoTasks.push(newTask);
+        todoTaskInput.value = '';
+        todoSaveTasks();
+        todoRenderTasks();
+      }
+    }
+
+    function todoRenderTasks() {
+      todoTaskList.innerHTML = '';
+      todoTasks.forEach(task => {
+        const li = document.createElement('li');
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.className = 'todo-checkbox';
+        checkbox.checked = task.completed;
+        checkbox.addEventListener('change', function () {
+          todoToggleTaskCompleted(task.id);
+        });
+
+        const span = document.createElement('span');
+        span.className = 'todo-task-text';
+        span.textContent = task.text;
+        if (task.completed) {
+          span.classList.add('todo-completed');
+        }
+
+        const deleteButton = document.createElement('button');
+        deleteButton.className = 'todo-delete-btn';
+        deleteButton.textContent = 'Delete';
+        deleteButton.addEventListener('click', function () {
+          todoDeleteTask(task.id);
+        });
+
+        li.appendChild(checkbox);
+        li.appendChild(span);
+        li.appendChild(deleteButton);
+        todoTaskList.appendChild(li);
+      });
+    }
+
+    function todoToggleTaskCompleted(taskId) {
+      const taskIndex = todoTasks.findIndex(task => task.id === taskId);
+      if (taskIndex !== -1) {
+        todoTasks[taskIndex].completed = !todoTasks[taskIndex].completed;
+        todoSaveTasks();
+        todoRenderTasks();
+      }
+    }
+
+    function todoDeleteTask(taskId) {
+      todoTasks = todoTasks.filter(task => task.id !== taskId);
+      todoSaveTasks();
+      todoRenderTasks();
+    }
+
+    todoAddButton.addEventListener('click', todoAddTask);
+    todoTaskInput.addEventListener('keypress', function (e) {
+      if (e.key === 'Enter') {
+        todoAddTask();
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Fortune Generator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      text-align: center;
+      padding: 40px;
+    }
+    .fortune-box {
+      padding: 20px;
+      border: 2px solid black;
+      background-color: white;
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+    .fortune-buttons button {
+      margin: 5px;
+      padding: 8px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>Fortune Generator</h1>
+  <div class="fortune-box" id="fortuneBox"></div>
+  <div class="fortune-buttons">
+    <button onclick="fortuneChangeTextColor()">Change Text Color</button>
+    <button onclick="fortuneChangeBgColor()">Change Background Color</button>
+    <button onclick="fortuneChangeBorderColor()">Change Border Color</button>
+    <button onclick="fortuneChangeFontSize()">Change Font Size & Style</button>
+  </div>
+
+  <script>
+    const fortunes = [
+      "Good things are coming your way!",
+      "Believe in yourself and all that you are.",
+      "A new opportunity will present itself soon.",
+      "Happiness is found in the little things.",
+      "Trust the process and keep moving forward.",
+      "Your kindness will bring great rewards.",
+      "Challenges are opportunities in disguise.",
+      "Success comes to those who work for it.",
+      "Embrace change and growth.",
+      "Today is a fresh start."
+    ];
+
+    function getRandomFortune() {
+      return fortunes[Math.floor(Math.random() * fortunes.length)];
+    }
+
+    function fortuneGetRandomColor() {
+      return "#" + Math.floor(Math.random() * 16777215).toString(16);
+    }
+
+    document.getElementById("fortuneBox").innerText = getRandomFortune();
+
+    function fortuneChangeTextColor() {
+      document.getElementById("fortuneBox").style.color = fortuneGetRandomColor();
+    }
+
+    function fortuneChangeBgColor() {
+      document.getElementById("fortuneBox").style.backgroundColor = fortuneGetRandomColor();
+    }
+
+    function fortuneChangeBorderColor() {
+      document.getElementById("fortuneBox").style.borderColor = fortuneGetRandomColor();
+    }
+
+    function fortuneChangeFontSize() {
+      const sizes = ["18px", "22px", "26px", "30px"];
+      const fonts = ["Arial", "Verdana", "Georgia", "Times New Roman"];
+      let box = document.getElementById("fortuneBox");
+      box.style.fontSize = sizes[Math.floor(Math.random() * sizes.length)];
+      box.style.fontFamily = fonts[Math.floor(Math.random() * fonts.length)];
+    }
+  </script>
+</body>
+</html>
